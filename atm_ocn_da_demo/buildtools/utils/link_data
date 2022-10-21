@@ -1,0 +1,160 @@
+#!/usr/bin/env ruby
+
+# Required environment variables:
+#   * REPRODUCIBILITY_DATA_LIST : File to store file digests.
+#       Digest checking and storing will be disabled if not set.
+#   * CASE_ROOT: Root directory of case.
+#       Digest checking and storing will be disabled if not set.
+#   * QUICK_DIGEST: Option to enable/disable full digest.
+#       Will calculate quick digest only if this option is set to 1.
+#   * WARNING_REPORT_FILE: File to record warning.
+#   * DIGEST_CHECKING: Option to enable digest checking.
+require "fileutils"
+require "getoptlong"
+require "digest"
+require "pathname"
+require "yaml/store"
+
+def writeWarning(text)
+  print "[WARNING] #{text}"
+  File.open(ENV["WARNING_REPORT_FILE"], "a") { |f| f.write(text) } if ENV["WARNING_REPORT_FILE"] != nil
+end
+
+def fullFileDigest(path)
+  sha = Digest::SHA256.new
+  File.open(path) do |f|
+    while chunk = f.read(4096)
+      sha << chunk
+    end
+  end
+  sha.hexdigest
+end
+
+def quickFileDigest(path)
+  nil
+end
+
+def getFileDigests(path)
+  { :full => (ENV["QUICK_DIGEST"] == 1 ? nil : fullFileDigest(path)),
+    :quick => quickFileDigest(path) }
+end
+
+def compareDigests(digest1, digest2)
+  if ENV["QUICK_DIGEST"] == 1 or digest1[:full] == nil or digest2[:full] == nil then
+    digest1[:quick] == digest2[:quick]
+  else
+    digest1[:full] == digest2[:full]
+  end
+end
+
+def copyOrLinkFile(src, dst, flag_link, flag_record, flag_check)
+  puts "  copy or link: #{src} #{dst}"
+  if flag_link then
+    FileUtils.ln_sf(src, dst)
+  else
+    FileUtils.copy_file(src, dst)
+  end
+  if flag_record or flag_check then
+    digest = getFileDigests(dst)
+    relative_path = Pathname.new(dst).relative_path_from(Pathname.new(ENV["CASE_ROOT"])).to_s
+    $list_store.transaction do
+      if flag_record then
+        $list_store[relative_path] = digest
+      end
+      if flag_check then
+        storing_digest = $list_store[relative_path]
+        if storing_digest == nil then
+          writeWarning "Digest misssing for \"#{relative_path}\"\n"
+        else
+          if ! compareDigests(storing_digest, digest) then
+            writeWarning "Digest of \"#{relative_path}\" is different with digest in reproducibility archive.\n"
+          end
+        end
+      end
+    end
+  end
+end
+
+opts = GetoptLong.new(
+  ['--link', '-l', GetoptLong::NO_ARGUMENT ],
+  ['--copy', '-c', GetoptLong::NO_ARGUMENT ],
+  ['--no-record-and-check', '-n', GetoptLong::NO_ARGUMENT]
+)
+
+#Default settings
+flag_link = true
+flag_check = false
+flag_check = true if ENV["DIGEST_CHECKING"] == "1"
+
+opts.each do |opt, arg|
+  case opt
+  when '--link'
+    flag_link = true
+  when '--copy'
+    flag_link = false
+  when '--no-record-and-check'
+    ENV["REPRODUCIBILITY_DATA_LIST"] = nil
+    flag_check = false
+    flag_record = false
+  end
+end
+
+if ENV["REPRODUCIBILITY_DATA_LIST"] == nil
+  flag_record = false
+  flag_check = false
+else
+  $list_file = File.absolute_path(ENV["REPRODUCIBILITY_DATA_LIST"])
+  $list_store = YAML::Store.new $list_file
+  flag_record = true if ! flag_check
+end
+if ENV["CASE_ROOT"] == nil
+  flag_record = false
+  flag_check = false
+end
+
+if ARGV.length < 2 then
+  puts "Missing source and/or destination argument(s)."
+  exit 1
+end
+
+dst = File.absolute_path(ARGV.pop)
+
+ENV["WARNING_REPORT_FILE"] = File.absolute_path(ENV["WARNING_REPORT_FILE"]) if ENV["WARNING_REPORT_FILE"] != nil
+
+puts "flag_link = #{flag_link}"
+puts "flag_check = #{flag_check}"
+puts "flag_record = #{flag_record}"
+puts "list_file = #{$list_file}"
+puts "dst = #{dst}"
+
+while ((src = ARGV.shift) != nil) do
+
+  src = File.absolute_path(src)
+  dst_final = dst
+
+  if File.directory?(src) then
+    puts "src(directory) = #{src}"
+    if File.directory?(dst) then
+      dst_final = "#{dst}/#{File.basename(src)}"
+    else
+      dst_final = dst
+    end
+    FileUtils.mkdir_p(dst_final)
+    Dir.chdir(src) do
+      Dir.glob("**/*") do |filename|
+        puts "  #{filename}"
+        if File.directory?(filename) then
+          FileUtils.mkdir_p("#{dst_final}/#{filename}")
+        else
+          copyOrLinkFile("#{src}/#{filename}", "#{dst_final}/#{filename}", flag_link, flag_record, flag_check)
+        end
+      end
+    end
+  else
+    puts "src(file) = #{src}"
+    dst_final = "#{dst_final}/#{File.basename(src)}" if File.directory?(dst_final)
+    FileUtils.mkdir_p(File.dirname(dst_final))
+    copyOrLinkFile(src, dst_final, flag_link, flag_record, flag_check)
+  end
+
+end
