@@ -1,0 +1,5 @@
+&atm_demo_nml
+  time_length             = 21600
+  time_step               = 1800
+  coupling_freq           = 1800
+/

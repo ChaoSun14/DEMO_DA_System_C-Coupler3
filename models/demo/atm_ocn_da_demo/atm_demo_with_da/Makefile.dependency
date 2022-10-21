@@ -1,0 +1,17 @@
+spmd_init_mod.o : spmd_init_mod.f90
+
+parse_namelist_mod.o : parse_namelist_mod.f90
+
+ran_mod.o : ran_mod.f90
+
+grid_init_mod.o : grid_init_mod.f90 spmd_init_mod.o
+
+decomp_init_mod.o : decomp_init_mod.f90 spmd_init_mod.o parse_namelist_mod.o grid_init_mod.o
+
+variable_mod.o : variable_mod.f90 spmd_init_mod.o grid_init_mod.o decomp_init_mod.o
+
+coupling_ocn_model_mod.o : coupling_ocn_model_mod.F90 spmd_init_mod.o parse_namelist_mod.o grid_init_mod.o decomp_init_mod.o variable_mod.o
+
+model_setting_mod.o : model_setting_mod.F90 spmd_init_mod.o parse_namelist_mod.o grid_init_mod.o decomp_init_mod.o variable_mod.o coupling_ocn_model_mod.o ran_mod.o
+
+atm_demo.o : atm_demo.f90 model_setting_mod.o spmd_init_mod.o

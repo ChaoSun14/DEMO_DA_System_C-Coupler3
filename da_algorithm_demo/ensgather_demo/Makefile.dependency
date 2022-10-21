@@ -1,0 +1,19 @@
+da_ensgather_demo_ccpl_coupling_mod.o : da_ensgather_demo_ccpl_coupling_mod.F90 decomp_init_mod.o
+
+ran_mod.o : ran_mod.F90
+
+spmd_init_mod.o : spmd_init_mod.F90
+
+parse_namelist_mod.o : parse_namelist_mod.F90
+
+grid_init_mod.o : grid_init_mod.F90 spmd_init_mod.o
+
+decomp_init_mod.o : decomp_init_mod.F90 spmd_init_mod.o parse_namelist_mod.o grid_init_mod.o
+
+variable_mod.o : variable_mod.F90 spmd_init_mod.o grid_init_mod.o decomp_init_mod.o
+
+model_setting_mod.o : model_setting_mod.F90 spmd_init_mod.o parse_namelist_mod.o grid_init_mod.o decomp_init_mod.o variable_mod.o ran_mod.o da_ensgather_demo_ccpl_coupling_mod.o
+
+da_algorithm_demo.o : da_algorithm_demo.F90 model_setting_mod.o spmd_init_mod.o
+
+da_ensgather_demo_mod.o : da_ensgather_demo_mod.F90 da_ensgather_demo_ccpl_coupling_mod.o model_setting_mod.o spmd_init_mod.o

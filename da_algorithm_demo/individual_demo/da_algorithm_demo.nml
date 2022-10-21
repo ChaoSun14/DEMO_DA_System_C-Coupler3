@@ -1,0 +1,9 @@
+&da_algorithm_demo_nml
+  ANAL_TIME = '20210501000000'
+  NLATS     = 565
+  NLONS     = 577
+  NLEVS     = 40
+  NANALS    = 10 
+  NVARS     = 5
+  decomp_type_id = 2
+/
