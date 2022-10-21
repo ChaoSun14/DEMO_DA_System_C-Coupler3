@@ -1,0 +1,17 @@
+#!/bin/bash
+
+Srclist=$2
+
+touch $Srclist
+cat > $Srclist << EOF
+$1/src/Data_MGT
+$1/src/Parallel_MGT
+$1/src/Runtime_MGT
+$1/src/XML
+$1/src/Driver
+$1/src/Utils
+$1/src/CoR
+$1/src/PatCC
+EOF
+
+exit 0

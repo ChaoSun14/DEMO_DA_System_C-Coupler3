@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<da_instance status="on">
+	<external_procedures status="on" procedures_name="ocn_da_demo_individual" type="package" dll_name="libda_individual_demo_ocn.so"/>
+    <ensemble_components status="off">
+        <comp_ensemble_full_name name="ensmbe_comp_member*@ocn_demo"/>
+    </ensemble_components>
+    <periodic_timer status="off" period_unit="seconds" period_count="7200" local_lag_count="0"/>
+    <periodic_timer status="on" period_unit="seconds" period_count="7200" local_lag_count="0"/>
+    <field_instances status="on">
+        <time_processing status="off" type="inst" period_unit="seconds" period_count="21600" local_lag_count="0">
+        </time_processing>
+        <ensemble_operation status="off" type="none">
+        </ensemble_operation>
+    </field_instances>
+    <processing_control status="on">
+        <working_directory status="off" path="da_demo"/>
+        <config_scripts status="on">
+            <pre_instance_script status="off" name="da_demo_run.sh"/>
+            <post_instance_script status="off" name=""/>
+        </config_scripts>
+    </processing_control>   
+</da_instance>
+</root>

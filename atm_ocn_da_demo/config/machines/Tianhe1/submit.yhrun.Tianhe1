@@ -1,0 +1,126 @@
+#!/bin/bash
+##################################################################################
+#  Copyright (c) 2013, Tsinghua University. 
+#  This code is initially finished by Dr. Ruizhe Li on 2013/3/28,
+#  and then modified by Dr. Li Liu
+#  If you have any problem, please contact:
+#  Dr. Ruizhe Li via liruizhe@gmail.com
+#  or Dr. Li Liu via liuli-cess@tsinghua.edu.cn
+##################################################################################
+
+check=`expr $# % 4`
+if (( check != 0 ))
+then
+    echo $#
+    echo "Wrong paramters!"
+    exit 1;
+fi
+
+#Number of Models
+num_of_models=`expr $# / 4`
+
+rm -f ${log_dir}/${CASENAME}.submit.conf.${configuration_time}
+
+#paramter of mpiexec
+
+declare -a proc_map
+declare -a node_num_proc
+node_total_need=0
+proc_count=0
+for (( i = 0; i < num_of_models; i++ ))
+do
+    execmd[i]=$1
+    shift
+    inputnml[i]=$1
+    shift
+    num_proc[i]=$1
+    shift
+    num_thread[i]=$1
+    shift
+    if (( ${num_thread[i]} > 1 )); then
+        echo "${num_thread[i]}" 
+        echo "ERROR!!!!! Tianhe1 does not support multi threads like OpenMP currently"
+        exit 1;
+    fi
+    
+    let start_proc=proc_count
+
+    for (( j = 0; j < num_proc[i]; j++ )); do
+        finished=0
+        for (( k = 0; k < node_total_need; k++ )); do
+            if (( ${node_num_proc[k]} + ${num_thread[i]} <= $NUM_CORES_PER_NODE )); then
+                proc_map[proc_count]=$k
+                let node_num_proc[k]=node_num_proc[k]+num_thread[i]
+                finished=1
+                break
+            fi
+        done
+        if (( $finished == 0 )); then
+            proc_map[proc_count]=$node_total_need
+            node_num_proc[node_total_need]=${num_thread[i]}
+            let node_total_need=node_total_need+1
+        fi
+        let proc_count=proc_count+1
+    done
+    let end_proc=proc_count-1
+    if (( i == 0)); then
+        param="$param -n ${num_proc[i]} ${execmd[i]} ${inputnml[i]}"
+    else
+        param="$param : -n ${num_proc[i]} ${execmd[i]} ${inputnml[i]}"
+    fi
+done
+
+let node_count=node_total_need%NUM_CORES_PER_NODE
+if (( $node_count == 0 )); then
+    let node_num=node_total_need/NUM_CORES_PER_NODE
+else
+    let node_num=node_total_need/NUM_CORES_PER_NODE+1
+fi
+
+
+export LD_LIBRARY_PATH=/lib64/:$LD_LIBRARY_PATH
+
+if (( num_of_models > 1 )); then
+
+cat > ${log_dir}/${CASENAME}.submit << EOF
+#!/bin/csh -f
+#SBATCH -J halo_test
+#SBATCH -p normal
+#SBATCH -n $proc_count
+#SBATCH -N $node_total_need
+#SBATCH --ntasks-per-node=64
+#SBATCH --exclusive
+#SBATCH -o ${log_dir}/${CASENAME}.output
+#SBATCH -e ${log_dir}/${CASENAME}.error
+
+module purge
+module load compiler/intel/2017.5.239
+module load mpi/hpcx/2.7.4/intel-2017.5.239
+module load mathlib/netcdf/intel/4.4.1
+#module load ...
+
+export I_MPI_FABRICS=shm:dapl
+export I_MPI_DAPL_UD=1
+export I_MPI_DAPL_UD_RDMA_MIXED=1
+export I_MPI_LARGE_SCALE_THRESHOLD=8192
+export I_MPI_DAPL_UD_ACK_SEND_POOL_SIZE=8704
+export I_MPI_DAPL_UD_ACK_RECV_POOL_SIZE=8704
+export I_MPI_DAPL_UD_RNDV_EP_NUM=2
+export DAPL_UCM_REP_TIME=8000
+export DAPL_UCM_RTU_TIME=8000
+export DAPL_UCM_RETRY=10
+export DAPL_UCM_CQ_SIZE=2000
+export DAPL_UCM_QP_SIZE=2000
+export DAPL_UCM_DREQ_RETRY=4
+export DAPL_UCM_DREP_TIME=200
+export DAPL_UCM_WAIT_TIME=10000
+mpirun  $param
+
+EOF
+
+    sbatch ${log_dir}/${CASENAME}.submit
+#    srun -J ${CASENAME} -p normal -N $node_total_need -n $proc_count --multi-prog  ${log_dir}/${CASENAME}.submit.conf.${configuration_time} 1>${log_dir}/${CASENAME}.output.${configuration_time} 2>${log_dir}/${CASENAME}.error.${configuration_time}
+else
+    srun -J ${CASENAME} -p normal $param 1>${log_dir}/${CASENAME}.output.${configuration_time} 2>${log_dir}/${CASENAME}.error.${configuration_time} 
+fi
+

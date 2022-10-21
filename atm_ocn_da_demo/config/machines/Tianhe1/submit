@@ -1,0 +1,97 @@
+#!/bin/bash
+export OS=Linux
+export GMAKE_J=2
+export SUBMITTER=yhrun
+export NUM_NODES=90
+export NUM_CORES_PER_NODE=64
+CASE_ROOT="/public/home/zhangxz/dafcc_test/dafcc_demo/atm_ocn_da_demo"
+CASENAME="dafcc_demo"
+param="mpirun"
+
+declare -a proc_map
+declare -a node_num_proc
+node_total_need=0
+proc_count=0
+
+is_first=1
+num_of_models=0
+while read line; do
+    execmd="$line"
+    echo $execmd
+    read num_total_proc
+    read num_thread
+    shift
+    if [ "$is_first" == "1" ]
+    then
+        is_first=0
+    else
+        let num_of_models=num_of_models+1
+        param="$param : "
+    fi
+    param="$param -n $num_total_proc $execmd"
+    
+    let start_proc=proc_count
+
+    for (( j = 0; j < $num_total_proc; j++ )); do
+        finished=0
+        for (( k = 0; k < node_total_need; k++ )); do
+            if (( ${node_num_proc[k]} + ${num_thread} <= $NUM_CORES_PER_NODE )); then
+                proc_map[proc_count]=$k
+                let node_num_proc[k]=node_num_proc[k]+$num_thread
+                finished=1
+                break
+            fi
+        done
+        if (( $finished == 0 )); then
+            proc_map[proc_count]=$node_total_need
+            node_num_proc[node_total_need]=${num_thread}
+            let node_total_need=node_total_need+1
+        fi
+        let proc_count=proc_count+1
+    done
+    let end_proc=proc_count-1
+
+let node_count=node_total_need%NUM_CORES_PER_NODE
+if (( $node_count == 0 )); then
+    let node_num=node_total_need/NUM_CORES_PER_NODE
+else
+    let node_num=node_total_need/NUM_CORES_PER_NODE+1
+fi
+done < "$1"
+
+export LD_LIBRARY_PATH=/lib64/:$LD_LIBRARY_PATH
+echo "num_of_models" $num_of_models 
+echo "case_root" ${CASE_ROOT}/${CASENAME}
+echo $param
+if (( num_of_models > 1 )); then
+
+cat > ${CASE_ROOT}/${CASENAME}.submit << EOF
+#!/bin/csh -f
+#SBATCH -J ${CASENAME}
+#SBATCH -p normal
+#SBATCH -n $proc_count
+#SBATCH -N $node_total_need
+#SBATCH --ntasks-per-node=64
+#SBATCH --exclusive
+#SBATCH -o ${CASE_ROOT}/${CASENAME}.output
+#SBATCH -e ${CASE_ROOT}/${CASENAME}.error
+
+module purge
+module load compiler/intel/2017.5.239
+module load mpi/intelmpi/2017.4.239
+module load mathlib/netcdf/intel/4.4.1
+
+$param 
+
+EOF
+
+    sbatch ${CASE_ROOT}/${CASENAME}.submit
+    #srun -J ${CASENAME} -p normal -N $node_total_need -n $proc_count --multi-prog  ${CASE_ROOT}/${CASENAME}.submit  1>${CASE_ROOT}/${CASENAME}.output 2>${CASE_ROOT}/${CASENAME}.error
+else
+    srun -J ${CASENAME} -p normal $param 1>${CASE_ROOT}/${CASENAME}.output.${configuration_time} 2>${CASE_ROOT}/${CASENAME}.error.${configuration_time} 
+fi
+
+
+
+
+

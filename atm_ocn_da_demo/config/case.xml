@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<case>
+    <name>atm_ocn_da_demo</name>
+    <machine>Miyun</machine>
+    <ccpl_default_namelist>yes</ccpl_default_namelist>
+    <running_settings>
+        <run type="initial">
+            <leap_year>on</leap_year>
+            <start_date>20150801</start_date>
+            <start_second>00000</start_second>
+            <reference_date>00010101</reference_date>
+            <stop_option>date</stop_option>
+            <stop_date>20150801</stop_date>
+            <stop_second>21600</stop_second>
+            <stop_n>1</stop_n>
+            <restart_date>12000201</restart_date>
+            <restart_second>00000</restart_second>
+        </run>
+        <write_restart>
+            <freq_unit>seconds</freq_unit>
+            <freq_count>43200</freq_count>
+         </write_restart>
+    </running_settings>
+    <libraries>
+        <library type="static" name="c-coupler" />
+    </libraries>
+    <pre_configure></pre_configure>
+    <post_configure></post_configure>
+    <models>
+        <model type="coupled" name="atm_ocn_demo" ensemble_size="10" ensemble_submit="yes">
+           <default>
+                <submit_settings>
+                    <paramter>CCPL_ensemble_${ENSEMBLE_SIZE}_${ENSEMBLE_ID}</paramter>
+                </submit_settings>
+                <custom_settings>
+                    <time_length>21600</time_length>
+                </custom_settings>
+                <models>
+                    <model type="atm" name="atm_demo">
+                        <parallel_settings num_total_procs="10" num_threads="1" >
+                        </parallel_settings>
+                        <custom_settings>
+                            <grid_info>20km</grid_info>
+                            <time_step>1800</time_step>
+                            <coupling_freq>1800</coupling_freq>
+                            <num_3d_vars>3</num_3d_vars>
+                        </custom_settings>
+                    </model>
+                    <model type="ocn" name="ocn_demo">
+                        <parallel_settings num_total_procs="200" num_threads="1" >
+                        </parallel_settings>
+                        <custom_settings>
+                            <grid_info>20km</grid_info>
+                            <time_step>1800</time_step>
+                            <coupling_freq>1800</coupling_freq>
+                            <num_3d_vars>3</num_3d_vars>
+                        </custom_settings>
+                    </model>
+                </models>
+            </default>
+        </model>
+    </models>
+</case>
+

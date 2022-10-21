@@ -1,0 +1,25 @@
+#!/bin/bash
+
+param="mpiexec"
+
+is_first=1
+
+while read line; do
+    execmd="$line"
+    read num_total_proc
+    read num_thread
+    shift
+    if [ "$is_first" == "1" ]
+    then
+        is_first=0
+    else
+        param="$param : "
+    fi
+    param="$param -n $num_total_proc -env I_MPI_PIN_DOMAIN socket -env OMP_NUM_THREADS $num_thread $execmd"
+done < "$1"
+
+export I_MPI_PIN=disable
+
+#param="$param > ${log_dir}/${CASENAME}.log.${configuration_time}"
+echo $param
+eval $param

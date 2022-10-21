@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<model>
+    <model_dir>/public/home/zhangxz/dafcc_test/sample_da_dafcc1/models/demo/atm_ocn_da_demo/ocn_demo_with_da</model_dir>
+    <data_dir>/public/home/zhangxz/dafcc_test/sample_da_dafcc1/inputdata/ocn/ocn_demo</data_dir>
+    <configure_script>/public/home/zhangxz/dafcc_test/sample_da_dafcc1/atm_ocn_da_demo/config/models/ocn/ocn_demo/config.sh</configure_script>
+    <configure_interaction>yes</configure_interaction>
+    <compile_script>build.sh</compile_script>
+</model>

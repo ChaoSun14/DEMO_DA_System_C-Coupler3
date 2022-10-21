@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<da_instance status="on">
+	<external_procedures status="on" procedures_name="atm_da_demo_ensgather" type="package" dll_name="libda_ensgather_demo_atm.so"/>
+    <ensemble_components status="on">
+        <comp_ensemble_full_name name="ensmbe_comp_member*@atm_demo"/>
+    </ensemble_components>
+    <periodic_timer status="on" period_unit="seconds" period_count="7200" local_lag_count="0"/>
+    <field_instances status="on">
+        <time_processing status="off" type="inst" period_unit="seconds" period_count="21600" local_lag_count="0">
+        </time_processing>
+        <ensemble_operation status="on" type="gather">
+    	    <field name="date"  type="mem_1"/>
+    	    <field name="LEV"  type="mem_1"/>
+    	    <field name="LAT"  type="mem_1"/>
+    	    <field name="LON"  type="mem_1"/>
+        </ensemble_operation>
+    </field_instances>
+    <processing_control status="on">
+        <working_directory status="on" path="./da_demo"/>
+        <config_scripts status="on">
+            <pre_instance_script status="off" name="da_demo_run.sh"/>
+            <post_instance_script status="off" name=""/>
+        </config_scripts>
+    </processing_control>   
+</da_instance>
+</root>

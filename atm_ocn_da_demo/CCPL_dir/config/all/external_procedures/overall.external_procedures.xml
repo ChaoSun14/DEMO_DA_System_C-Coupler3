@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<root>
+<external_procedures_package name="atm_da_demo_individual" library="libda_individual_demo_atm.so"  status="on">
+    <procedure status="on" name="da_demo" />
+</external_procedures_package>
+<external_procedures_package name="atm_da_demo_ensmean" library="libda_ensmean_demo_atm.so"  status="on">
+    <procedure status="on" name="da_ensmean_demo" />
+</external_procedures_package>
+<external_procedures_package name="atm_da_demo_ensgather" library="libda_ensgather_demo_atm.so"  status="on">
+    <procedure status="on" name="da_ensgather_demo" />
+</external_procedures_package>
+<external_procedures_package name="ocn_da_demo_individual" library="libda_individual_demo_ocn.so"  status="on">
+    <procedure status="on" name="da_demo" />
+</external_procedures_package>
+<external_procedures_package name="ocn_da_demo_ensmean" library="libda_ensmean_demo_ocn.so"  status="on">
+    <procedure status="on" name="da_ensmean_demo" />
+</external_procedures_package>
+<external_procedures_package name="ocn_da_demo_ensgather" library="libda_ensgather_demo_ocn.so"  status="on">
+    <procedure status="on" name="da_ensgather_demo" />
+</external_procedures_package>
+</root>
+

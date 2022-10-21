@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<Time_setting
+  case_name="atm_ocn_da_demo"
+  model_name="atm_ocn_da_demo"
+  run_type="initial"
+  leap_year="on"
+  start_date="20150801"
+  start_second="00000"
+  reference_date="00010101"
+  rest_freq_unit="seconds"
+  rest_freq_count="43200"
+  stop_option="date"
+  stop_date="20150801"
+  stop_second="21600"
+  stop_n="1"
+/>

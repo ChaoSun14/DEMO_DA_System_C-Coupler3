@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<field name="psl"  dimensions="H2D"   long_name="Sea level pressure"  type="state"  default_unit="Pa" />
+<field name="prect"  dimensions="H2D"   long_name="precpitation"  type="state"  default_unit="m s-1" />
+<field name="flds"  dimensions="H2D"   long_name="Long wave downward flux at surface"  type="state"  default_unit="W m-2" />
+<field name="fsds"  dimensions="H2D"   long_name="Short wave downward flux at surface"  type="state"  default_unit="W m-2" />
+<field name="sst"  dimensions="H2D"   long_name="Surface temperature"  type="state"  default_unit="K" />
+<field name="ssh"  dimensions="H2D"   long_name="sea surface height"  type="state"  default_unit="m" />
+<field name="salt"  dimensions="H2D"   long_name="sea surface saltinity"  type="state"  default_unit="PU" />
+<field name="salt_3d"  dimensions="V3D"   long_name="3d saltinity"  type="state"  default_unit="PU" />
+<field name="TAUX"  dimensions="H2D"   long_name="taux"  type="state"  default_unit="N m-2" />
+<field name="TAUY"  dimensions="H2D"   long_name="tauy"  type="state"  default_unit="N m-2" />
+<field name="PS"  dimensions="H2D"   long_name="ps"  type="state"  default_unit="Pa" />
+<field name="T"  dimensions="V3D"   long_name="temperature"  type="state"  default_unit="K" />
+<field name="LEV"  dimensions="V1D"   long_name="lev"  type="state"  default_unit="unitless" />
+<field name="LAT"  dimensions="H2D"   long_name="latitude"  type="state"  default_unit="degree_north" />
+<field name="LON"  dimensions="H2D"   long_name="longitude"  type="state"  default_unit="degree_east" />
+<field name="date"  dimensions="0D"   long_name="date"  type="state"  default_unit="seconds" />
+<field name="vars_3d_001"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_002"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_003"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_004"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_005"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_006"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_007"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_008"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_009"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_010"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_011"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_012"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_013"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_014"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_015"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_016"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_017"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_018"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_019"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_020"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_021"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_022"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_023"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_024"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_025"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_026"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_027"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_028"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_029"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_030"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_031"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_032"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_033"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_034"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_035"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_036"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_037"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_038"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_039"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_040"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_041"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_042"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_043"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_044"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_045"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_046"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_047"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_048"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_049"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+<field name="vars_3d_050"  dimensions="V3D"   long_name="3d vars"  type="state"  default_unit="PU"/>
+
